@@ -10,18 +10,30 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+# - script: echo Hello, world!
+#   displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-- task: CopyFiles@2
-  inputs:
-    targetFolder: '$(Build.ArtifactStagingDirectory)'    
+# - script: |
+#     echo Add other tasks to build, test, and deploy your project.
+#     echo See https://aka.ms/yaml
+#   displayName: 'Run a multi-line script'
+# - task: CopyFiles@2
+#   inputs:
+#     targetFolder: '$(Build.ArtifactStagingDirectory)'    
 
-- task: PublishBuildArtifacts@1    
-  displayName: 'Publish Artifact: drop'
+# - task: PublishBuildArtifacts@1    
+#   displayName: 'Publish Artifact: drop'
+#   inputs:
+#     PathtoPublish: '$(build.artifactstagingdirectory)'
+- task: TerraformInstaller@1
   inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
+    terraformVersion: 'latest'
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: 'Azure for Students(6d0e6d2e-cd5a-4f3e-b17a-afc9bce653dc)'
+    backendAzureRmResourceGroupName: 'myrg'
+    backendAzureRmStorageAccountName: 'rgsto'
+    backendAzureRmContainerName: 'cont1'
+    backendAzureRmKey: '.tfstate'
